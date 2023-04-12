@@ -16,7 +16,7 @@ jmp LABEL_BEGIN
 LABEL_GDT: Descriptor 0, 0, 0 ; null descriptor
 LABEL_DESC_NORMAL: Descriptor 0, 0ffffh, DA_DRW
 LABEL_DESC_PAGE_DIR: Descriptor PageDirBase, 4095, DA_DRW
-LABEL_DESC_PAGE_TBL: Descriptor PageTblBase, 1023, DA_DRW
+LABEL_DESC_PAGE_TBL: Descriptor PageTblBase, 1023, DA_DRW + DA_LIMIT_4K
 LABEL_DESC_CODE32: Descriptor 0, SegCode32Len - 1, DA_C + DA_32
 LABEL_DESC_CODE16: Descriptor 0, 0ffffh, DA_C
 LABEL_DESC_DATA: Descriptor 0, DataLen-1, DA_DRW
@@ -64,7 +64,7 @@ LABEL_BEGIN:
 
     mov [LABEL_GO_BACK_TO_REAL + 3], ax
     mov [SPValueInRealMode], sp
-
+    
     ;initial 16 bit code descriptor
     mov ax, cs
     movzx eax, ax
@@ -153,6 +153,8 @@ LABEL_REAL_ENTRY:
 [SECTION .s32] ; 32bit code, jump fron real mode
 [BITS 32]
 LABEL_SEG_CODE32:
+    call SetupPaging
+
     mov ax, SelectorData
     mov ds, ax
     mov ax, SelectorVideo
@@ -189,7 +191,7 @@ SetupPaging:
     mov ecx,1024
     xor edi, edi
     xor eax, eax
-    mov eax, PageTblBase
+    mov eax, PageTblBase | PG_P | PG_USU | PG_RWW
 .1:
     stosd
     add eax, 4096

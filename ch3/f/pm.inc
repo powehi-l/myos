@@ -6,6 +6,7 @@
 
 ;----------------------------------------
 DA_32 EQU 4000h
+DA_LIMIT_4K EQU 8000h
 
 DA_DPL0 EQU 00h ;DPL = 0
 DA_DPL1 EQU 20h ;DPL = 1
