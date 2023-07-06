@@ -1,7 +1,0 @@
-kernel/tty.c: In function ‘tty_do_write’:
-kernel/tty.c:112:5: warning: implicit declaration of function ‘out_char’ [-Wimplicit-function-declaration]
-  112 |     out_char(p_tty->p_console, ch);
-      |     ^~~~~~~~
-1+0 records in
-1+0 records out
-512 bytes copied, 8.4428e-05 s, 6.1 MB/s
